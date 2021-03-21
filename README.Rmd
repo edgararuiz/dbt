@@ -36,7 +36,12 @@ devtools::install_github("edgararuiz/dbt")
 library(dbt)
 library(pracma)
 
-dbt_read_run_script()
+script_results <- dbt_read_run_script(silent = TRUE)
+
+script_results
 ```
 
+```{r}
+dbt_read_run_script()
+```
 

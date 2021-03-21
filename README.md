@@ -25,6 +25,18 @@ devtools::install_github("edgararuiz/dbt")
 library(dbt)
 library(pracma)
 
+script_results <- dbt_read_run_script(silent = TRUE)
+#> Warning: Outer names are only allowed for unnamed scalar atomic inputs
+
+script_results
+#> Succesful tests: 75
+#> Test with errors: 0
+#> Failed tests: 0
+#> Total number of tests: 75
+#> 
+```
+
+``` r
 dbt_read_run_script()
 #> SUCCESS | mutate() | acos | acos(1/fld_double)
 #> SUCCESS | filter() | acos | acos(1/fld_double) < 1
@@ -101,4 +113,10 @@ dbt_read_run_script()
 #> SUCCESS | summarise() | tanh | sum(tanh(fld_double), na.rm = TRUE)
 #> SUCCESS | group_by() | tanh | tanh(fld_double)
 #> SUCCESS | arrange() | tanh | tanh(fld_double)
+#> Warning: Outer names are only allowed for unnamed scalar atomic inputs
+#> Succesful tests: 75
+#> Test with errors: 0
+#> Failed tests: 0
+#> Total number of tests: 75
+#> 
 ```
