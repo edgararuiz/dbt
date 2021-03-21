@@ -42,3 +42,25 @@ dbt_test_filter <- function(test_expression = fld_double > 2,
     NULL
   }
 }
+#' @export
+dbt_test_arrange<- function(test_expression = fld_double + 1,
+                            test_field = fld_double,
+                            target_table = testdata,
+                            source_table = testdata) {
+
+  sm <- arrange({{source_table}}, {{test_expression}})
+  sr <- pull(sm, {{test_field}})
+
+  tm <- NULL
+  try(
+    tm <- arrange({{target_table}}, {{test_expression}}),
+    silent = TRUE
+  )
+  if(!is.null(tm)) {
+    tr <- pull(tm, {{test_field}})
+    all(sr == tr)
+  } else {
+    NULL
+  }
+}
+
