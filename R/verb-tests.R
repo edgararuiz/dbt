@@ -151,21 +151,26 @@ dbt_test_group_by_summarise <- function(group_by_expression = fld_double + 1,
 #' @export
 dbt_verb_result <- function(dplyr_verb = "mutate()",
                             test = "add",
+                            result = "dplyr result",
                             tested_expression = NULL,
                             source_table_result = NULL,
                             target_table_result = NULL,
                             status = TRUE) {
   if(is.null(status)) {
     log_status <- "ERROR"
+    log_result <- "The operation failed to run in Target source"
   } else {
     if(status) {
       log_status <- "SUCCESS"
+      log_result <- ""
     } else {
       log_status <- "WARNING"
+      log_result <- "Operation ran, but results from Source and Target differ"
     }
   }
   dbt_log_result(
     dplyr_verb = dplyr_verb,
+    result = log_result,
     test = test,
     tested_expression = tested_expression,
     target_table_result = target_table_result,

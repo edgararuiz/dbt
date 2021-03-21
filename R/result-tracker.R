@@ -2,6 +2,7 @@
 #' @export
 dbt_log_result <- function(dplyr_verb = "mutate()",
                            test = "add",
+                           result = "Explanation of result",
                            tested_expression = NULL,
                            source_table_result = NULL,
                            target_table_result = NULL,
@@ -9,6 +10,7 @@ dbt_log_result <- function(dplyr_verb = "mutate()",
   structure(
     list(
       dplyr_verb = dplyr_verb,
+      result = result,
       test = test,
       tested_expression = tested_expression,
       source_table_result = source_table_result,
@@ -27,7 +29,13 @@ print.dbt_result <- function(x, ...) {
   if(x$status == "SUCCESS") out <- green(x$status)
   if(x$status == "ERROR") out <- red(x$status)
   if(x$status == "WARNING") out <- yellow(x$status)
-  out <- c(out, bold(x$dplyr_verb), x$test, cyan(x$tested_expression))
+  out <- c(
+    out,
+    bold(x$dplyr_verb),
+    x$test,
+    x$result,
+    cyan(x$tested_expression)
+    )
   cat(paste(out, collapse = " | "))
   invisible(x)
 }
