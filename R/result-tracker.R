@@ -1,17 +1,19 @@
-#' @import crayon
+#' @importFrom crayon red green cyan bold
 #' @export
-dbt_log_result <- function(test = "mutate()",
-                       tested_expression = NULL,
-                       source_table_result = NULL,
-                       target_table_result = NULL,
-                       status = "SUCCESS") {
+dbt_log_result <- function(dplyr_verb = "mutate()",
+                           test = "add",
+                           tested_expression = NULL,
+                           source_table_result = NULL,
+                           target_table_result = NULL,
+                           status = "SUCCESS") {
   structure(
     list(
-     test = test,
-     tested_expression = tested_expression,
-     source_table_result = source_table_result,
-     target_table_result = target_table_result,
-     status = status
+      dplyr_verb = dplyr_verb,
+      test = test,
+      tested_expression = tested_expression,
+      source_table_result = source_table_result,
+      target_table_result = target_table_result,
+      status = status
      ),
     class = "dbt_result"
   )
@@ -23,7 +25,8 @@ setOldClass("dbt_result")
 print.dbt_result <- function(x, ...) {
   out <- NULL
   if(x$status == "SUCCESS") out <- green(x$status)
-  out <- c(out, bold(x$test), cyan(x$tested_expression))
+  if(x$status == "ERROR") out <- red(x$status)
+  out <- c(out, bold(x$dplyr_verb), x$test, cyan(x$tested_expression))
   cat(paste(out, collapse = " | "))
   invisible(x)
 }

@@ -21,7 +21,8 @@ dbt_test_mutate <- function(test_expression = fld_double + 1,
     NULL
   }
   dbt_log_result(
-    test = "mutate",
+    dplyr_verb = "mutate()",
+    test = "add",
     tested_expression = as_label(enexpr(test_expression)),
     source_table_result = sr,
     target_table_result = tr,
