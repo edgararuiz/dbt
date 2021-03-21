@@ -64,3 +64,47 @@ dbt_test_arrange<- function(test_expression = fld_double + 1,
   }
 }
 
+#' @export
+dbt_test_summarise <- function(test_expression = fld_double + 1,
+                               target_table = testdata,
+                               source_table = testdata) {
+
+  sm <- summarise({{source_table}}, x = {{test_expression}})
+  sr <- pull(sm, x)
+
+  tm <- NULL
+  try(
+    tm <- summarise({{target_table}}, x = {{test_expression}}),
+    silent = TRUE
+  )
+  if(!is.null(tm)) {
+    tr <- pull(tm, x)
+    all(sr == tr)
+  } else {
+    NULL
+  }
+}
+
+#' @export
+dbt_test_group_by <- function(test_expression = fld_double + 1,
+                              target_table = testdata,
+                              source_table = testdata) {
+
+  sm <- group_by({{source_table}}, {{test_expression}})
+  ss <- summarise(sm, x = n())
+  sr <- pull(ss, x)
+
+  tm <- NULL
+  try({
+    tm <- group_by({{target_table}}, {{test_expression}})
+    ts <- summarise(tm, x = n())
+    },
+    silent = TRUE
+  )
+  if(!is.null(tm)) {
+    tr <- pull(ts, x)
+    all(sr == tr)
+  } else {
+    NULL
+  }
+}
