@@ -4,8 +4,8 @@
 #' @export
 #'
 dbt_test_mutate <- function(test_expression = fld_double + 1,
-                            target_table = testdata,
-                            source_table = testdata,
+                            target_table = dbt_test_data,
+                            source_table = dbt_test_data,
                             test = NULL) {
 
   sm <- mutate({{source_table}}, x = {{test_expression}})
@@ -37,8 +37,8 @@ dbt_test_mutate <- function(test_expression = fld_double + 1,
 #' @export
 dbt_test_filter <- function(test_expression = fld_double > 2,
                             test_field = fld_double,
-                            target_table = testdata,
-                            source_table = testdata,
+                            target_table = dbt_test_data,
+                            source_table = dbt_test_data,
                             test = "add") {
   sm <- filter({{source_table}}, {{test_expression}})
   sr <- pull(sm, {{test_field}})
@@ -68,8 +68,8 @@ dbt_test_filter <- function(test_expression = fld_double > 2,
 #' @export
 dbt_test_arrange<- function(test_expression = fld_double + 1,
                             test_field = fld_double,
-                            target_table = testdata,
-                            source_table = testdata,
+                            target_table = dbt_test_data,
+                            source_table = dbt_test_data,
                             test = "add") {
 
   sm <- arrange({{source_table}}, {{test_expression}})
@@ -100,8 +100,8 @@ dbt_test_arrange<- function(test_expression = fld_double + 1,
 
 #' @export
 dbt_test_summarise <- function(test_expression = sum(fld_double + 1),
-                               target_table = testdata,
-                               source_table = testdata,
+                               target_table = dbt_test_data,
+                               source_table = dbt_test_data,
                                test = "add") {
 
   sm <- summarise({{source_table}}, x = {{test_expression}})
@@ -132,8 +132,8 @@ dbt_test_summarise <- function(test_expression = sum(fld_double + 1),
 
 #' @export
 dbt_test_group_by <- function(test_expression = fld_double + 1,
-                              target_table = testdata,
-                              source_table = testdata,
+                              target_table = dbt_test_data,
+                              source_table = dbt_test_data,
                               test = "add") {
 
   sm <- group_by({{source_table}}, {{test_expression}})
@@ -168,8 +168,8 @@ dbt_test_group_by <- function(test_expression = fld_double + 1,
 #' @export
 dbt_test_group_by_summarise <- function(group_by_expression = fld_double + 1,
                                         summarise_expression = sum(fld_double),
-                                        target_table = testdata,
-                                        source_table = testdata,
+                                        target_table = dbt_test_data,
+                                        source_table = dbt_test_data,
                                         test = "add") {
 
   sm <- group_by({{source_table}}, {{group_by_expression}})

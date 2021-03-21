@@ -34,8 +34,8 @@ print.dbt_result_set <- function(x, ...) {
 
 #' @export
 dbt_read_run_script <- function(file_path = system.file("tests/math-trigonometry.yml", package = "dbt"),
-                                source_table = testdata,
-                                target_table = testdata,
+                                source_table = dbt_test_data,
+                                target_table = dbt_test_data,
                                 silent = FALSE) {
   test_script <- read_yaml(file_path)
   dbt_run_script(
@@ -48,8 +48,8 @@ dbt_read_run_script <- function(file_path = system.file("tests/math-trigonometry
 
 #' @export
 dbt_run_script <- function(script_list,
-                           source_table = testdata,
-                           target_table = testdata,
+                           source_table = dbt_test_data,
+                           target_table = dbt_test_data,
                            silent = FALSE) {
   raw_results <- script_list %>%
     map(~ {
