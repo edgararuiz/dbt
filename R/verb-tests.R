@@ -19,7 +19,8 @@ dbt_test_mutate <- function(test_expression = fld_double + 1,
   )
   if(!is.null(tm)) {
     tr <- pull(tm, x)
-    res <- all(sr == tr)
+    res <- length(sr) == length(tr)
+    if(res) res <- all(sr == tr)
   } else {
     res <- NULL
   }
@@ -50,7 +51,8 @@ dbt_test_filter <- function(test_expression = fld_double > 2,
   )
   if(!is.null(tm)) {
     tr <- pull(tm, {{test_field}})
-    res <- all(sr == tr)
+    res <- length(sr) == length(tr)
+    if(res) res <- all(sr == tr)
   } else {
     res <- NULL
   }
@@ -81,7 +83,8 @@ dbt_test_arrange<- function(test_expression = fld_double + 1,
   )
   if(!is.null(tm)) {
     tr <- pull(tm, {{test_field}})
-    res <- all(sr == tr)
+    res <- length(sr) == length(tr)
+    if(res) res <- all(sr == tr)
   } else {
     res <- NULL
   }
@@ -112,7 +115,8 @@ dbt_test_summarise <- function(test_expression = sum(fld_double + 1),
   )
   if(!is.null(tm)) {
     tr <- pull(tm, x)
-    res <- all(sr == tr)
+    res <- length(sr) == length(tr)
+    if(res) res <- all(sr == tr)
   } else {
     res <- NULL
   }
@@ -137,6 +141,7 @@ dbt_test_group_by <- function(test_expression = fld_double + 1,
   sr <- pull(ss, x)
 
   tm <- NULL
+  tr <- NULL
   try({
     tm <- group_by({{target_table}}, {{test_expression}})
     ts <- summarise(tm, x = n())
@@ -145,7 +150,8 @@ dbt_test_group_by <- function(test_expression = fld_double + 1,
   )
   if(!is.null(tm)) {
     tr <- pull(ts, x)
-    res <- all(sr == tr)
+    res <- length(sr) == length(tr)
+    if(res) res <- all(sr == tr)
   } else {
     res <- NULL
   }
@@ -180,7 +186,8 @@ dbt_test_group_by_summarise <- function(group_by_expression = fld_double + 1,
   )
   if(!is.null(tm)) {
     tr <- pull(ts, x)
-    res <- all(sr == tr)
+    res <- length(sr) == length(tr)
+    if(res) res <- all(sr == tr)
   } else {
     res <- NULL
   }
