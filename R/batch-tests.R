@@ -14,7 +14,7 @@ dbt_read_run_script <- function(file_path = system.file("tests/math-trigonometry
 
 #' @export
 dbt_run_script <- function(script_list, silent = FALSE) {
-  test_results <- test_script %>%
+  test_results <- script_list %>%
     map(~ {
       x <- .x
       imap(

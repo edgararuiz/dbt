@@ -29,3 +29,14 @@ And the development version from [GitHub](https://github.com/) with:
 # install.packages("devtools")
 devtools::install_github("edgararuiz/dbt")
 ```
+
+## Using
+
+```{r}
+library(dbt)
+library(pracma)
+
+dbt_read_run_script()
+```
+
+
