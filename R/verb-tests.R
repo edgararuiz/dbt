@@ -65,7 +65,7 @@ dbt_test_arrange<- function(test_expression = fld_double + 1,
 }
 
 #' @export
-dbt_test_summarise <- function(test_expression = fld_double + 1,
+dbt_test_summarise <- function(test_expression = sum(fld_double + 1),
                                target_table = testdata,
                                source_table = testdata) {
 
@@ -100,6 +100,31 @@ dbt_test_group_by <- function(test_expression = fld_double + 1,
     ts <- summarise(tm, x = n())
     },
     silent = TRUE
+  )
+  if(!is.null(tm)) {
+    tr <- pull(ts, x)
+    all(sr == tr)
+  } else {
+    NULL
+  }
+}
+
+#' @export
+dbt_test_group_by_summarise <- function(group_by_expression = fld_double + 1,
+                                        summarise_expression = sum(fld_double),
+                                        target_table = testdata,
+                                        source_table = testdata) {
+
+  sm <- group_by({{source_table}}, {{group_by_expression}})
+  ss <- summarise(sm, x = {{summarise_expression}})
+  sr <- pull(ss, x)
+
+  tm <- NULL
+  try({
+    tm <- group_by({{target_table}}, {{group_by_expression}})
+    ts <- summarise(tm, x = {{summarise_expression}})
+  },
+  silent = TRUE
   )
   if(!is.null(tm)) {
     tr <- pull(ts, x)

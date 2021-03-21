@@ -3,6 +3,7 @@
 export(dbt_test_arrange)
 export(dbt_test_filter)
 export(dbt_test_group_by)
+export(dbt_test_group_by_summarise)
 export(dbt_test_mutate)
 export(dbt_test_summarise)
 import(dplyr)
