@@ -2,6 +2,7 @@
 #' @import rlang
 #' @import dplyr
 #' @export
+#'
 dbt_test_mutate <- function(test_expression = fld_double + 1,
                             target_table = testdata,
                             source_table = testdata) {
@@ -10,23 +11,24 @@ dbt_test_mutate <- function(test_expression = fld_double + 1,
   sr <- pull(sm, x)
 
   tm <- NULL
+  tr <- NULL
   try(
     tm <- mutate({{target_table}}, x = {{test_expression}}),
     silent = TRUE
   )
   if(!is.null(tm)) {
     tr <- pull(tm, x)
-    all(sr == tr)
+    res <- all(sr == tr)
   } else {
-    NULL
+    res <- NULL
   }
-  dbt_log_result(
+  dbt_verb_result(
     dplyr_verb = "mutate()",
     test = "add",
     tested_expression = as_label(enexpr(test_expression)),
     source_table_result = sr,
     target_table_result = tr,
-    status = "SUCCESS"
+    status = res
   )
 }
 
@@ -39,6 +41,7 @@ dbt_test_filter <- function(test_expression = fld_double > 2,
   sr <- pull(sm, {{test_field}})
 
   tm <- NULL
+  tr <- NULL
   try(
     tm <- filter({{source_table}}, {{test_expression}}),
     silent = TRUE
@@ -60,6 +63,7 @@ dbt_test_arrange<- function(test_expression = fld_double + 1,
   sr <- pull(sm, {{test_field}})
 
   tm <- NULL
+  tr <- NULL
   try(
     tm <- arrange({{target_table}}, {{test_expression}}),
     silent = TRUE
@@ -81,6 +85,7 @@ dbt_test_summarise <- function(test_expression = sum(fld_double + 1),
   sr <- pull(sm, x)
 
   tm <- NULL
+  tr <- NULL
   try(
     tm <- summarise({{target_table}}, x = {{test_expression}}),
     silent = TRUE
@@ -128,6 +133,7 @@ dbt_test_group_by_summarise <- function(group_by_expression = fld_double + 1,
   sr <- pull(ss, x)
 
   tm <- NULL
+  tr <- NULL
   try({
     tm <- group_by({{target_table}}, {{group_by_expression}})
     ts <- summarise(tm, x = {{summarise_expression}})
@@ -140,4 +146,30 @@ dbt_test_group_by_summarise <- function(group_by_expression = fld_double + 1,
   } else {
     NULL
   }
+}
+
+#' @export
+dbt_verb_result <- function(dplyr_verb = "mutate()",
+                            test = "add",
+                            tested_expression = NULL,
+                            source_table_result = NULL,
+                            target_table_result = NULL,
+                            status = TRUE) {
+  if(is.null(status)) {
+    log_status <- "ERROR"
+  } else {
+    if(status) {
+      log_status <- "SUCCESS"
+    } else {
+      log_status <- "WARNING"
+    }
+  }
+  dbt_log_result(
+    dplyr_verb = dplyr_verb,
+    test = test,
+    tested_expression = tested_expression,
+    target_table_result = target_table_result,
+    source_table_result = source_table_result,
+    status = log_status
+  )
 }

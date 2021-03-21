@@ -1,4 +1,4 @@
-#' @importFrom crayon red green cyan bold
+#' @importFrom crayon red green cyan bold yellow
 #' @export
 dbt_log_result <- function(dplyr_verb = "mutate()",
                            test = "add",
@@ -26,6 +26,7 @@ print.dbt_result <- function(x, ...) {
   out <- NULL
   if(x$status == "SUCCESS") out <- green(x$status)
   if(x$status == "ERROR") out <- red(x$status)
+  if(x$status == "WARNING") out <- yellow(x$status)
   out <- c(out, bold(x$dplyr_verb), x$test, cyan(x$tested_expression))
   cat(paste(out, collapse = " | "))
   invisible(x)
