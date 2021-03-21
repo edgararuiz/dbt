@@ -117,7 +117,7 @@ dbt_test_summarise <- function(test_expression = sum(fld_double + 1),
     res <- NULL
   }
   dbt_verb_result(
-    dplyr_verb = "arrange()",
+    dplyr_verb = "summarise()",
     test = test,
     tested_expression = as_label(enexpr(test_expression)),
     source_table_result = sr,
@@ -208,7 +208,7 @@ dbt_verb_result <- function(dplyr_verb = "mutate()",
   } else {
     if(status) {
       log_status <- "SUCCESS"
-      log_result <- ""
+      log_result <- NULL
     } else {
       log_status <- "WARNING"
       log_result <- "Operation ran, but results from Source and Target differ"

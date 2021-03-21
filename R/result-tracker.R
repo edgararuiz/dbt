@@ -36,7 +36,8 @@ print.dbt_result <- function(x, ...) {
     x$result,
     cyan(x$tested_expression)
     )
-  cat(paste(out, collapse = " | "))
+  msg <- paste(out, collapse = " | ")
+  cat(paste0(msg, "\n"))
   invisible(x)
 }
 
