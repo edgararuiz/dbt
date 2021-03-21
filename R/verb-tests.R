@@ -5,7 +5,8 @@
 #'
 dbt_test_mutate <- function(test_expression = fld_double + 1,
                             target_table = testdata,
-                            source_table = testdata) {
+                            source_table = testdata,
+                            test = NULL) {
 
   sm <- mutate({{source_table}}, x = {{test_expression}})
   sr <- pull(sm, x)
@@ -24,7 +25,7 @@ dbt_test_mutate <- function(test_expression = fld_double + 1,
   }
   dbt_verb_result(
     dplyr_verb = "mutate()",
-    test = "add",
+    test = test,
     tested_expression = as_label(enexpr(test_expression)),
     source_table_result = sr,
     target_table_result = tr,
@@ -36,7 +37,8 @@ dbt_test_mutate <- function(test_expression = fld_double + 1,
 dbt_test_filter <- function(test_expression = fld_double > 2,
                             test_field = fld_double,
                             target_table = testdata,
-                            source_table = testdata) {
+                            source_table = testdata,
+                            test = "add") {
   sm <- filter({{source_table}}, {{test_expression}})
   sr <- pull(sm, {{test_field}})
 
@@ -48,16 +50,25 @@ dbt_test_filter <- function(test_expression = fld_double > 2,
   )
   if(!is.null(tm)) {
     tr <- pull(tm, {{test_field}})
-    all(sr == tr)
+    res <- all(sr == tr)
   } else {
-    NULL
+    res <- NULL
   }
+  dbt_verb_result(
+    dplyr_verb = "filter()",
+    test = test,
+    tested_expression = as_label(enexpr(test_expression)),
+    source_table_result = sr,
+    target_table_result = tr,
+    status = res
+  )
 }
 #' @export
 dbt_test_arrange<- function(test_expression = fld_double + 1,
                             test_field = fld_double,
                             target_table = testdata,
-                            source_table = testdata) {
+                            source_table = testdata,
+                            test = "add") {
 
   sm <- arrange({{source_table}}, {{test_expression}})
   sr <- pull(sm, {{test_field}})
@@ -70,16 +81,25 @@ dbt_test_arrange<- function(test_expression = fld_double + 1,
   )
   if(!is.null(tm)) {
     tr <- pull(tm, {{test_field}})
-    all(sr == tr)
+    res <- all(sr == tr)
   } else {
-    NULL
+    res <- NULL
   }
+  dbt_verb_result(
+    dplyr_verb = "arrange()",
+    test = test,
+    tested_expression = as_label(enexpr(test_expression)),
+    source_table_result = sr,
+    target_table_result = tr,
+    status = res
+  )
 }
 
 #' @export
 dbt_test_summarise <- function(test_expression = sum(fld_double + 1),
                                target_table = testdata,
-                               source_table = testdata) {
+                               source_table = testdata,
+                               test = "add") {
 
   sm <- summarise({{source_table}}, x = {{test_expression}})
   sr <- pull(sm, x)
@@ -92,16 +112,25 @@ dbt_test_summarise <- function(test_expression = sum(fld_double + 1),
   )
   if(!is.null(tm)) {
     tr <- pull(tm, x)
-    all(sr == tr)
+    res <- all(sr == tr)
   } else {
-    NULL
+    res <- NULL
   }
+  dbt_verb_result(
+    dplyr_verb = "arrange()",
+    test = test,
+    tested_expression = as_label(enexpr(test_expression)),
+    source_table_result = sr,
+    target_table_result = tr,
+    status = res
+  )
 }
 
 #' @export
 dbt_test_group_by <- function(test_expression = fld_double + 1,
                               target_table = testdata,
-                              source_table = testdata) {
+                              source_table = testdata,
+                              test = "add") {
 
   sm <- group_by({{source_table}}, {{test_expression}})
   ss <- summarise(sm, x = n())
@@ -116,17 +145,26 @@ dbt_test_group_by <- function(test_expression = fld_double + 1,
   )
   if(!is.null(tm)) {
     tr <- pull(ts, x)
-    all(sr == tr)
+    res <- all(sr == tr)
   } else {
-    NULL
+    res <- NULL
   }
+  dbt_verb_result(
+    dplyr_verb = "group_by()",
+    test = test,
+    tested_expression = as_label(enexpr(test_expression)),
+    source_table_result = sr,
+    target_table_result = tr,
+    status = res
+  )
 }
 
 #' @export
 dbt_test_group_by_summarise <- function(group_by_expression = fld_double + 1,
                                         summarise_expression = sum(fld_double),
                                         target_table = testdata,
-                                        source_table = testdata) {
+                                        source_table = testdata,
+                                        test = "add") {
 
   sm <- group_by({{source_table}}, {{group_by_expression}})
   ss <- summarise(sm, x = {{summarise_expression}})
@@ -142,10 +180,18 @@ dbt_test_group_by_summarise <- function(group_by_expression = fld_double + 1,
   )
   if(!is.null(tm)) {
     tr <- pull(ts, x)
-    all(sr == tr)
+    res <- all(sr == tr)
   } else {
-    NULL
+    res <- NULL
   }
+  dbt_verb_result(
+    dplyr_verb = "group_by() / summarise()",
+    test = test,
+    tested_expression = as_label(enexpr(summarise_expression)),
+    source_table_result = sr,
+    target_table_result = tr,
+    status = res
+  )
 }
 
 #' @export
