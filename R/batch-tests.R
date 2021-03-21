@@ -1,6 +1,36 @@
-#' @importFrom purrr map imap
+#' @importFrom purrr map imap map_chr
 #' @importFrom yaml read_yaml
 
+#' @export
+dbt_log_result_set <- function(test_results = list()) {
+  statuses <- purrr::map_chr(test_results, ~.x$status)
+  success1 <- length(statuses[statuses == "SUCCESS"])
+  error1 <- length(statuses[statuses == "ERROR"])
+  warning1 <- length(statuses[statuses == "WARNING"])
+  structure(
+    list(
+      test_results = test_results,
+      result_total = length(statuses),
+      result_success = success1,
+      result_warning = warning1,
+      result_error = error1
+    ),
+    class = "dbt_result_set"
+  )
+}
+
+setOldClass("dbt_result_set")
+
+#' @export
+print.dbt_result_set <- function(x, ...) {
+  msg <- paste0(
+    green("Succesful tests: "), x$result_success, "\n",
+    yellow("Test with errors: "), x$result_warning, "\n",
+    red("Failed tests: "), x$result_error, "\n",
+    bold("Total number of tests: ") , bold(x$result_total), "\n"
+  )
+  cat(paste( msg, "\n"))
+}
 
 #' @export
 dbt_read_run_script <- function(file_path = system.file("tests/math-trigonometry.yml", package = "dbt"),
@@ -21,7 +51,7 @@ dbt_run_script <- function(script_list,
                            source_table = testdata,
                            target_table = testdata,
                            silent = FALSE) {
-  test_results <- script_list %>%
+  raw_results <- script_list %>%
     map(~ {
       x <- .x
       imap(
@@ -65,5 +95,8 @@ dbt_run_script <- function(script_list,
         }
       )
     })
-
+  test_results <- flatten(flatten(raw_results))
+  test_results <- set_names(test_results, 1:length(test_results))
+  dbt_log_result_set(test_results)
 }
+
