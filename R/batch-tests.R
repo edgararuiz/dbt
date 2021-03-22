@@ -3,7 +3,7 @@
 
 #' @export
 dbt_log_result_set <- function(test_results = list()) {
-  statuses <- purrr::map_chr(test_results, ~.x$status)
+  statuses <- purrr::map_chr(test_results, ~ .x$status)
   success1 <- length(statuses[statuses == "SUCCESS"])
   error1 <- length(statuses[statuses == "ERROR"])
   warning1 <- length(statuses[statuses == "WARNING"])
@@ -27,9 +27,9 @@ print.dbt_result_set <- function(x, ...) {
     green("Succesful tests: "), x$result_success, "\n",
     yellow("Test with errors: "), x$result_warning, "\n",
     red("Failed tests: "), x$result_error, "\n",
-    bold("Total number of tests: ") , bold(x$result_total), "\n"
+    bold("Total number of tests: "), bold(x$result_total), "\n"
   )
-  cat(paste( msg, "\n"))
+  cat(paste(msg, "\n"))
 }
 
 #' @export
@@ -64,31 +64,55 @@ dbt_run_script <- function(script_list,
               test_expression <- parse_expr(.x)
               dplyr_verb <- .y
               res <- NULL
-              if (dplyr_verb == "mutate") res <- dbt_test_mutate(test_expression = !!test_expression,
-                                                                 source_table = source_table,
-                                                                 target_table = target_table,
-                                                                 test = test)
-              if (dplyr_verb == "summarise") res <- dbt_test_summarise(test_expression = !!test_expression,
-                                                                       source_table = source_table,
-                                                                       target_table = target_table,
-                                                                       test = test)
-              if (dplyr_verb == "summarize") res <- dbt_test_summarise(test_expression = !!test_expression,
-                                                                       source_table = source_table,
-                                                                       target_table = target_table,
-                                                                       test = test)
-              if (dplyr_verb == "arrange") res <- dbt_test_arrange(test_expression = !!test_expression,
-                                                                   source_table = source_table,
-                                                                   target_table = target_table,
-                                                                   test = test)
-              if (dplyr_verb == "group_by") res <- dbt_test_group_by(test_expression = !!test_expression,
-                                                                     source_table = source_table,
-                                                                     target_table = target_table,
-                                                                     test = test)
-              if (dplyr_verb == "filter") res <- dbt_test_filter(test_expression = !!test_expression,
-                                                                 source_table = source_table,
-                                                                 target_table = target_table,
-                                                                 test = test)
-              if(!silent) print(res)
+              if (dplyr_verb == "mutate") {
+                res <- dbt_test_mutate(
+                  test_expression = !!test_expression,
+                  source_table = source_table,
+                  target_table = target_table,
+                  test = test
+                )
+              }
+              if (dplyr_verb == "summarise") {
+                res <- dbt_test_summarise(
+                  test_expression = !!test_expression,
+                  source_table = source_table,
+                  target_table = target_table,
+                  test = test
+                )
+              }
+              if (dplyr_verb == "summarize") {
+                res <- dbt_test_summarise(
+                  test_expression = !!test_expression,
+                  source_table = source_table,
+                  target_table = target_table,
+                  test = test
+                )
+              }
+              if (dplyr_verb == "arrange") {
+                res <- dbt_test_arrange(
+                  test_expression = !!test_expression,
+                  source_table = source_table,
+                  target_table = target_table,
+                  test = test
+                )
+              }
+              if (dplyr_verb == "group_by") {
+                res <- dbt_test_group_by(
+                  test_expression = !!test_expression,
+                  source_table = source_table,
+                  target_table = target_table,
+                  test = test
+                )
+              }
+              if (dplyr_verb == "filter") {
+                res <- dbt_test_filter(
+                  test_expression = !!test_expression,
+                  source_table = source_table,
+                  target_table = target_table,
+                  test = test
+                )
+              }
+              if (!silent) print(res)
               res
             }
           )
@@ -99,4 +123,3 @@ dbt_run_script <- function(script_list,
   test_results <- set_names(test_results, 1:length(test_results))
   dbt_log_result_set(test_results)
 }
-
