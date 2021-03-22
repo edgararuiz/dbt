@@ -5,6 +5,8 @@ dbt_log_result <- function(dplyr_verb = "mutate()",
                            tested_expression = NULL,
                            source_table_result = NULL,
                            target_table_result = NULL,
+                           source_table_class = c("data.frame", "tibble"),
+                           target_table_class = c("data.frame", "tibble"),
                            status = "SUCCESS") {
   structure(
     list(
@@ -13,7 +15,9 @@ dbt_log_result <- function(dplyr_verb = "mutate()",
       test = test,
       tested_expression = tested_expression,
       source_table_result = source_table_result,
+      source_table_class = source_table_class,
       target_table_result = target_table_result,
+      target_table_class = target_table_class,
       status = status
     ),
     class = "dbt_result"

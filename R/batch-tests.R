@@ -1,5 +1,8 @@
 #' @export
-dbt_log_result_set <- function(test_results = list()) {
+dbt_log_result_set <- function(test_results = list(),
+                               source_table_class = NULL,
+                               target_table_class = NULL
+                               ) {
   statuses <- map_chr(test_results, ~ .x$status)
   success1 <- length(statuses[statuses == "SUCCESS"])
   error1 <- length(statuses[statuses == "ERROR"])
@@ -7,6 +10,8 @@ dbt_log_result_set <- function(test_results = list()) {
   structure(
     list(
       test_results = test_results,
+      source_table_class = source_table_class,
+      target_table_class = target_table_class,
       result_total = length(statuses),
       result_success = success1,
       result_warning = warning1,
@@ -21,6 +26,8 @@ setOldClass("dbt_result_set")
 #' @export
 print.dbt_result_set <- function(x, ...) {
   msg <- paste0(
+    bold("Source table class: "), x$source_table_class, "\n",
+    bold("Target table class: "), x$target_table_class, "\n",
     green("Succesful tests: "), x$result_success, "\n",
     yellow("Test with errors: "), x$result_warning, "\n",
     red("Failed tests: "), x$result_error, "\n",
@@ -39,8 +46,6 @@ dbt_read_run_folder <- function(folder_path = system.file("tests", package = "db
 
   file_paths <- paste0(folder_path, "/", file_list)
 
-  #file_paths <- head(file_paths, 3)
-
   run_tests <- map(
     file_paths,
     ~{
@@ -54,7 +59,11 @@ dbt_read_run_folder <- function(folder_path = system.file("tests", package = "db
   )
   run_tests <- flatten(run_tests)
   run_tests <- set_names(run_tests, 1:length(run_tests))
-  dbt_log_result_set(test_results = run_tests)
+  dbt_log_result_set(
+    test_results = run_tests,
+    target_table_class = class(target_table),
+    source_table_class = class(source_table)
+    )
 }
 
 #' @export

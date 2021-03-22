@@ -37,6 +37,8 @@ dbt_test_mutate <- function(test_expression = fld_double + 1,
     tested_expression = as_label(enexpr(test_expression)),
     source_table_result = sr,
     target_table_result = tr,
+    source_table_class = class(source_table),
+    target_table_class = class(target_table),
     status = res
   )
 }
@@ -69,6 +71,8 @@ dbt_test_filter <- function(test_expression = fld_double > 2,
     tested_expression = as_label(enexpr(test_expression)),
     source_table_result = sr,
     target_table_result = tr,
+    source_table_class = class(source_table),
+    target_table_class = class(target_table),
     status = res
   )
 }
@@ -110,6 +114,8 @@ dbt_test_arrange <- function(test_expression = fld_double + 1,
     tested_expression = as_label(enexpr(test_expression)),
     source_table_result = sr,
     target_table_result = tr,
+    source_table_class = class(source_table),
+    target_table_class = class(target_table),
     status = res
   )
 }
@@ -151,6 +157,8 @@ dbt_test_summarise <- function(test_expression = sum(fld_double + 1),
     tested_expression = as_label(enexpr(test_expression)),
     source_table_result = sr,
     target_table_result = tr,
+    source_table_class = class(source_table),
+    target_table_class = class(target_table),
     status = res
   )
 }
@@ -189,6 +197,8 @@ dbt_test_group_by <- function(test_expression = fld_double + 1,
     tested_expression = as_label(enexpr(test_expression)),
     source_table_result = sr,
     target_table_result = tr,
+    source_table_class = class(source_table),
+    target_table_class = class(target_table),
     status = res
   )
 }
@@ -225,6 +235,8 @@ dbt_test_group_by_summarise <- function(group_by_expression = fld_double + 1,
     tested_expression = as_label(enexpr(summarise_expression)),
     source_table_result = sr,
     target_table_result = tr,
+    source_table_class = class(source_table),
+    target_table_class = class(target_table),
     status = res
   )
 }
@@ -236,6 +248,8 @@ dbt_verb_result <- function(dplyr_verb = "mutate()",
                             tested_expression = NULL,
                             source_table_result = NULL,
                             target_table_result = NULL,
+                            source_table_class = c("data.frame", "tibble"),
+                            target_table_class = c("data.frame", "tibble"),
                             status = TRUE) {
   if (is.null(status)) {
     log_status <- "ERROR"
@@ -256,6 +270,8 @@ dbt_verb_result <- function(dplyr_verb = "mutate()",
     tested_expression = tested_expression,
     target_table_result = target_table_result,
     source_table_result = source_table_result,
+    source_table_class = source_table_class,
+    target_table_class = target_table_class,
     status = log_status
   )
 }
