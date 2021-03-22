@@ -1,15 +1,15 @@
 - if_else:
-    mutate: if_else(fld_logical, fld_double, fld_integer)
-    filter: if_else(fld_logical, fld_double, fld_integer) < 5
-    summarize: n_distinct(if_else(fld_logical, fld_double, fld_integer))
-    group_by: if_else(fld_logical, fld_double, fld_integer)
-    arrange: if_else(fld_logical, fld_double, fld_integer)
+    mutate: if_else(fld_logical, fld_double, fld_double + 1)
+    filter: if_else(fld_logical, fld_double, fld_double + 1) < 5
+    summarize: n_distinct(if_else(fld_logical, fld_double, fld_double + 1))
+    group_by: if_else(fld_logical, fld_double, fld_double + 1)
+    arrange: if_else(fld_logical, fld_double, fld_double + 1)
 - ifelse:
-    mutate: ifelse(fld_logical, fld_double, fld_integer)
-    filter: ifelse(fld_logical, fld_double, fld_integer) < 5
-    summarize: n_distinct(ifelse(fld_logical, fld_double, fld_integer))
-    group_by: ifelse(fld_logical, fld_double, fld_integer)
-    arrange: ifelse(fld_logical, fld_double, fld_integer)
+    mutate: ifelse(fld_logical, fld_double, fld_double + 1)
+    filter: ifelse(fld_logical, fld_double, fld_double + 1) < 5
+    summarize: n_distinct(ifelse(fld_logical, fld_double, fld_double + 1))
+    group_by: ifelse(fld_logical, fld_double, fld_double + 1)
+    arrange: ifelse(fld_logical, fld_double, fld_double + 1)
 - case_when:
     mutate: case_when(fld_double > 5 ~ "grt", TRUE ~ "other")
     filter: case_when(fld_double > 5 ~ "grt", TRUE ~ "other") == "grt"
@@ -44,25 +44,25 @@
     arrange: between(fld_integer,2,7)
 - pmin:
     mutate: pmin(fld_integer,fld_double,fld_logical)
-    filter: pmin(fld_integer,fld_double,fld_logical)
+    filter: pmin(fld_integer,fld_double,fld_logical) == 0
     summarize: n_distinct(pmin(fld_integer,fld_double,fld_logical))
     group_by: pmin(fld_integer,fld_double,fld_logical)
     arrange: pmin(fld_integer,fld_double,fld_logical)
 - pmax:
     mutate: pmax(fld_integer,fld_double,fld_logical)
-    filter: pmax(fld_integer,fld_double,fld_logical)
+    filter: pmax(fld_integer,fld_double,fld_logical) == 0
     summarize: n_distinct(pmax(fld_integer,fld_double,fld_logical))
     group_by: pmax(fld_integer,fld_double,fld_logical)
     arrange: pmax(fld_integer,fld_double,fld_logical)
 - pmin_local:
     mutate: pmin(1,2,3)
-    filter: pmin(1,2,3)
+    filter: pmin(1,2,3) == 1
     summarize: n_distinct(pmin(1,2,3))
     group_by: pmin(1,2,3)
     arrange: pmin(1,2,3)
 - pmax_local:
     mutate: pmax(1,2,3)
-    filter: pmax(1,2,3)
+    filter: pmax(1,2,3) == 1
     summarize: n_distinct(pmax(1,2,3))
     group_by: pmax(1,2,3)
     arrange: pmax(1,2,3)

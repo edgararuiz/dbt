@@ -22,9 +22,3 @@
     summarize: n_distinct(is.na(NA))
     group_by: is.na(NA)
     arrange: is.na(NA)
-- na_if:
-    mutate: na_if(fld_character,"a")
-    filter: is.na(na_if(fld_character,"a"))
-    summarize: n_distinct(na_if(fld_character,"a"))
-    group_by: na_if(fld_character,"a")
-    arrange: na_if(fld_character,"a")

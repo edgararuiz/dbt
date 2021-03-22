@@ -39,7 +39,7 @@ dbt_read_run_folder <- function(folder_path = system.file("tests", package = "db
 
   file_paths <- paste0(folder_path, "/", file_list)
 
-  file_paths <- head(file_paths, 2)
+  #file_paths <- head(file_paths, 3)
 
   run_tests <- map(
     file_paths,
