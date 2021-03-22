@@ -9,20 +9,29 @@ dbt_test_mutate <- function(test_expression = fld_double + 1,
                             test = NULL) {
 
   sm <- mutate({{source_table}}, x = {{test_expression}})
-  sr <- pull(sm, x)
+  sr1 <- pull(sm, x)
+  sr <- sr1[order(sr1)]
 
   tm <- NULL
   tr <- NULL
   try(
-    tm <- mutate({{target_table}}, x = {{test_expression}}),
+    {
+      tm <- mutate({{target_table}}, x = {{test_expression}})
+      tm2 <- arrange(tm, x)
+      },
     silent = TRUE
   )
-  if(!is.null(tm)) {
-    tr <- pull(tm, x)
+  if(!is.null(tm2)) {
+    tr1 <- pull(tm2, x)
+    tr <- tr1[order(tr1)]
     res <- length(sr) == length(tr)
-    if(res) res <- all(sr == tr)
-  } else {
-    res <- NULL
+    if(is.numeric(sr)) {
+      res <- !any(abs(sr - tr) > 0.1)
+      } else {
+        res <- all(sr == tr)
+        }
+    } else {
+      res <- NULL
   }
   dbt_verb_result(
     dplyr_verb = "mutate()",
