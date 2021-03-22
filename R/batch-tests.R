@@ -1,9 +1,6 @@
-#' @importFrom purrr map imap map_chr
-#' @importFrom yaml read_yaml
-
 #' @export
 dbt_log_result_set <- function(test_results = list()) {
-  statuses <- purrr::map_chr(test_results, ~ .x$status)
+  statuses <- map_chr(test_results, ~ .x$status)
   success1 <- length(statuses[statuses == "SUCCESS"])
   error1 <- length(statuses[statuses == "ERROR"])
   warning1 <- length(statuses[statuses == "WARNING"])

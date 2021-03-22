@@ -1,4 +1,3 @@
-#' @importFrom crayon red green cyan bold yellow
 #' @export
 dbt_log_result <- function(dplyr_verb = "mutate()",
                            test = "add",

@@ -1,8 +1,4 @@
-#' @import yaml
-#' @import rlang
-#' @import dplyr
 #' @export
-#'
 dbt_test_mutate <- function(test_expression = fld_double + 1,
                             target_table = dbt_test_data,
                             source_table = dbt_test_data,
