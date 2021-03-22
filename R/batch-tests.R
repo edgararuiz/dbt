@@ -30,6 +30,34 @@ print.dbt_result_set <- function(x, ...) {
 }
 
 #' @export
+dbt_read_run_folder <- function(folder_path = system.file("tests", package = "dbt"),
+                                source_table = dbt_test_data,
+                                target_table = dbt_test_data,
+                                silent = FALSE) {
+
+  file_list <- list.files(folder_path)
+
+  file_paths <- paste0(folder_path, "/", file_list)
+
+  file_paths <- head(file_paths, 2)
+
+  run_tests <- map(
+    file_paths,
+    ~{
+      dbt_read_run_script(
+        file_path = .x,
+        source_table = source_table,
+        target_table = target_table,
+        silent = silent
+      )$test_results
+    }
+  )
+  run_tests <- flatten(run_tests)
+  run_tests <- set_names(run_tests, 1:length(run_tests))
+  dbt_log_result_set(test_results = run_tests)
+}
+
+#' @export
 dbt_read_run_script <- function(file_path = system.file("tests/math-trigonometry.yml", package = "dbt"),
                                 source_table = dbt_test_data,
                                 target_table = dbt_test_data,
