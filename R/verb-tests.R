@@ -17,22 +17,23 @@ dbt_test_mutate <- function(test_expression = fld_double + 1,
   try(
     {
       tm <- mutate({{target_table}}, x = {{test_expression}})
-      tm2 <- arrange(tm, x)
       },
     silent = TRUE
   )
-  if(!is.null(tm2)) {
-    tr1 <- pull(tm2, x)
-    tr <- tr1[order(tr1)]
+
+  if(!is.null(tm)) {
+    tp <- pull(tm, x)
+    tr <- tp[order(tp)]
     res <- length(sr) == length(tr)
-    if(is.numeric(sr)) {
+    if(is.numeric(sr) & res) {
       res <- !any(abs(sr - tr) > 0.1)
       } else {
         res <- all(sr == tr)
         }
     } else {
       res <- NULL
-  }
+    }
+
   dbt_verb_result(
     dplyr_verb = "mutate()",
     test = test,
@@ -90,13 +91,19 @@ dbt_test_arrange<- function(test_expression = fld_double + 1,
     tm <- arrange({{target_table}}, {{test_expression}}),
     silent = TRUE
   )
+
   if(!is.null(tm)) {
-    tr <- pull(tm, {{test_field}})
+    tp <- pull(tm, {{test_field}})
     res <- length(sr) == length(tr)
-    if(res) res <- all(sr == tr)
+    if(is.numeric(sr) & res) {
+      res <- !any(abs(sr - tr) > 0.1)
+    } else {
+      res <- all(sr == tr)
+    }
   } else {
     res <- NULL
   }
+
   dbt_verb_result(
     dplyr_verb = "arrange()",
     test = test,
@@ -122,13 +129,20 @@ dbt_test_summarise <- function(test_expression = sum(fld_double + 1),
     tm <- summarise({{target_table}}, x = {{test_expression}}),
     silent = TRUE
   )
+
   if(!is.null(tm)) {
-    tr <- pull(tm, x)
+    tp <- pull(tm, x)
+    tr <- tp[order(tp)]
     res <- length(sr) == length(tr)
-    if(res) res <- all(sr == tr)
+    if(is.numeric(sr) & res) {
+      res <- !any(abs(sr - tr) > 0.1)
+    } else {
+      res <- all(sr == tr)
+    }
   } else {
     res <- NULL
   }
+
   dbt_verb_result(
     dplyr_verb = "summarise()",
     test = test,
@@ -147,7 +161,8 @@ dbt_test_group_by <- function(test_expression = fld_double + 1,
 
   sm <- group_by({{source_table}}, {{test_expression}})
   ss <- summarise(sm, x = n())
-  sr <- pull(ss, x)
+  sp <- pull(ss, x)
+  sr <- sp[order(sp)]
 
   tm <- NULL
   tr <- NULL
@@ -158,7 +173,8 @@ dbt_test_group_by <- function(test_expression = fld_double + 1,
     silent = TRUE
   )
   if(!is.null(tm)) {
-    tr <- pull(ts, x)
+    tp <- pull(ts, x)
+    tr <- tp[order(tp)]
     res <- length(sr) == length(tr)
     if(res) res <- all(sr == tr)
   } else {
