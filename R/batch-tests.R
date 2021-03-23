@@ -24,6 +24,24 @@ dbt_log_result_set <- function(test_results = list(),
 setOldClass("dbt_result_set")
 
 #' @export
+as_tibble.dbt_result_set <- function(x, ...) {
+  imap_dfr(
+    x$test_results,
+    ~{
+      tibble(
+        test_number = as.integer(.y),
+        dplyr_verb = .x$dplyr_verb,
+        test = .x$test,
+        result = ifelse(is.null(.x$result), "", .x$result),
+        expression = .x$tested_expression,
+        status = .x$status,
+        target_result = paste0(.x$target_table_result, collapse = ", "),
+        source_result = paste0(.x$source_table_result, collapse = ", ")
+      )
+    })
+}
+
+#' @export
 print.dbt_result_set <- function(x, ...) {
   msg <- paste0(
     bold("Source table class: "), x$source_table_class, "\n",

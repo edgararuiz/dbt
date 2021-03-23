@@ -1,5 +1,5 @@
 #' @importFrom crayon red green cyan bold yellow
-#' @importFrom purrr map imap map_chr
+#' @importFrom purrr map imap map_chr imap_dfr
 #' @importFrom yaml read_yaml
 #' @import rlang
 #' @import dplyr
