@@ -42,6 +42,73 @@ as_tibble.dbt_result_set <- function(x, ...) {
 }
 
 #' @export
+summary.dbt_result_set <- function(object, failed_only = TRUE) {
+  tr <- object$test_results
+
+  trt <- map(tr, ~.x$test)
+  char_trt <- as.character(trt)
+  unique_trt <- unique(char_trt)
+
+  find_trt <- map(
+    unique_trt,
+    ~{
+      ct <- .x
+      map_lgl(tr, ~.x$test == ct)
+    })
+
+  find_trt <- set_names(find_trt, unique_trt)
+
+  table_trt <- function(verb_name, sub_tr, test_name) {
+    verb_location <- map_lgl(sub_tr, ~.x$dplyr_verb == paste0(verb_name, "()"))
+    if(sum(verb_location) > 0) {
+      sts <- sub_tr[verb_location][[1]]$status
+      if(sts == "SUCCESS") res <- "S"
+      if(sts == "WARNING") res <- "W"
+      if(sts == "ERROR") res <- "E"
+    } else {
+      res <- "NT"
+    }
+    res
+  }
+
+  m_trt <- imap_dfr(
+    find_trt,
+    ~{
+      sub_tr <- tr[.x]
+      mutate_val <- table_trt("mutate", sub_tr, .y)
+      filter_val <- table_trt("filter", sub_tr, .y)
+      group_by_val <- table_trt("group_by", sub_tr, .y)
+      summarise_val <- table_trt("summarise", sub_tr, .y)
+      arrange_val <- table_trt("arrange", sub_tr, .y)
+
+      all_success <- "Yes"
+      if(mutate_val != "S" & mutate_val != "NT") all_success <- "No"
+      if(filter_val != "S" & filter_val != "NT") all_success <- "No"
+      if(group_by_val != "S" & group_by_val != "NT") all_success <- "No"
+      if(summarise_val != "S" & summarise_val != "NT") all_success <- "No"
+      if(arrange_val != "S" & arrange_val != "NT") all_success <- "No"
+
+      tibble(
+        test = .y,
+        mutate = mutate_val,
+        filter = filter_val,
+        group_by = group_by_val,
+        summarise = summarise_val,
+        arrange = arrange_val,
+        all_successful = all_success
+      )
+    }
+  )
+
+  if(!failed_only) {
+    m_trt
+  } else {
+    sr <- m_trt$all_successful == "No"
+    m_trt[sr, ]
+  }
+}
+
+#' @export
 print.dbt_result_set <- function(x, ...) {
   msg <- paste0(
     bold("Source table class: "), x$source_table_class, "\n",

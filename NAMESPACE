@@ -3,6 +3,7 @@
 S3method(as_tibble,dbt_result_set)
 S3method(print,dbt_result)
 S3method(print,dbt_result_set)
+S3method(summary,dbt_result_set)
 export(dbt_log_result)
 export(dbt_log_result_set)
 export(dbt_read_run_folder)
